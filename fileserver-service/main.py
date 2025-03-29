@@ -4,6 +4,8 @@ from minio import Minio
 import io
 import logging
 
+import uvicorn
+
 from uuid import uuid4
 
 
@@ -14,9 +16,9 @@ app = FastAPI()
 
 
 minio_client = Minio(
-    "localhost:9000",
-    access_key="minioadmin",
-    secret_key="minioadmin",
+    "minio-server:9000",
+    access_key="GJq5sZzTSHExYDWnfqbZ",
+    secret_key="1a76A8q47PQjS0buU7W2Mfsplz33lint10FfSQA2",
     secure=False
 )
 
@@ -33,6 +35,10 @@ if not found:
 else:
     logger.info(f"Bucket '{bucket_name}' already ready on MinIO")
 
+
+@app.get("/message")
+async def home():
+    return "Hello from the API !"
 
 @app.post("/upload")
 async def upload_file(my_file: UploadFile = File(...)):
@@ -83,3 +89,7 @@ async def download_file(filename: str):
             "error": "File is not found ou there's a problemn with MinIO",
             "details": str(e)
         }
+    
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=7004)

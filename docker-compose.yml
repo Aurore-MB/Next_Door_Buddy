@@ -1,18 +1,19 @@
 version: '3.8'
 
 services:
-  minio:
-    container_name: minio
+  minio-server:
+    image: quay.io/minio/minio:latest
+    container_name: minio-server
     ports:
       - "9000:9000"
       - "9001:9001"
     environment:
-      MINIO_ROOT_USER: ROOTNAME
-      MINIO_ROOT_PASSWORD: CHANGEME123
+      MINIO_ROOT_USER: ADMIN
+      MINIO_ROOT_PASSWORD: MINIOADMIN
     volumes:
       - ~/minio/data:/data
     command: server /data --console-address ":9001"
-    
+
   mongodb:
     image: mongodb/mongodb-community-server:latest
     container_name: main-db
@@ -36,24 +37,37 @@ services:
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
 
   fileserver-service:
-  redis-server:
-  exchanges-service:
-  background-workers:
+    image: files-api
+    container_name: files-api
+    build:
+      context: ./fileserver-service
+      dockerfile: Dockerfile
+    expose:
+      - 7004
+    ports:
+      - "7004:7004"
+    volumes:
+      - ./fileserver-service:/app
+
+    
+  # redis-server:
+  # exchanges-service:
+  # background-workers:
   gateway:
     image: traefik:v2.11.21
     ports:
-      -"80:80"
-      -"443:443"
-      -"9090:8080"
+      - "80:80"
+      - "443:443"
+      - "9090:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"  
       - "./gateway:/etc/traefik"
-  messages-service:
-  recommandation-service:
-
+  # messages-service:
+  # recommandation-service:
 
 
 volumes:
   mongo-data:
+  neo4j-data:
+  # files-api:
 
-  

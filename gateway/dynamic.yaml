@@ -1,0 +1,25 @@
+http:
+  routers:
+    minio-router: 
+      entryPoints:
+        - web
+      rule: "Host(`minio.localhost`)"
+      service: minio-service  
+
+    files-service-router: 
+      entryPoints:
+        - web
+      rule: "Host(`files-api.localhost`)"
+      service: files-service  
+
+
+  services: 
+    minio-service: 
+      loadBalancer: 
+        servers:
+          - url: http://minio-server:9001
+
+    files-service: 
+      loadBalancer: 
+        servers:
+          - url: http://files-api:7004

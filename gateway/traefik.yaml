@@ -9,7 +9,8 @@ providers:
     watch: true
     exposedByDefault: false
   file:
-    filename:  
+    filename: /etc/traefik/dynamic.yaml  
+    watch: true
 
 entryPoints:
   web: 
