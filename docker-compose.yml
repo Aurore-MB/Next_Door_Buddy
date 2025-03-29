@@ -40,6 +40,14 @@ services:
   exchanges-service:
   background-workers:
   gateway:
+    image: traefik:v2.11.21
+    ports:
+      -"80:80"
+      -"443:443"
+      -"9090:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"  
+      - "./gateway:/etc/traefik"
   messages-service:
   recommandation-service:
 
